@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+    <!-- vertex shader -->
+    <script id="vertex-shader" type="x-shader/x-vertex">
+
+        attribute vec4 vPosition;
+        attribute vec3 vNormal;
+
+        uniform mat4 modelView;
+        uniform mat4 projection;
+        uniform vec4 lightPosition;
+
+        uniform vec4 ambientProduct;
+        uniform vec4 diffuseProduct;
+        uniform vec4 specularProduct;
+        uniform float shininess;
+
+        varying vec4 fColor;
+
+        void main()
+        {
+            // lighting computation
+            vec3 pos = (modelView * vPosition).xyz;
+            vec3 light = lightPosition.xyz;
+            vec3 L = normalize(light-pos);
+
+            vec3 E = normalize(-pos);
+            vec3 H = normalize(L + E);
+           
+            vec3 N = normalize((modelView*(vec4(vNormal,0))).xyz);
+
+            vec4 ambient = ambientProduct;
+            float Kd = max(dot(L, N), 0.0);
+            vec4 diffuse = Kd*diffuseProduct;
+
+            float Ks = pow(max(dot(N, H), 0.0), shininess);
+            vec4 specular = Ks * specularProduct;
+
+            if(dot(L, N) < 0.0) {
+                specular = vec4(0.0, 0.0, 0.0, 1.0);
+            }
+
+            gl_Position = projection * modelView * vPosition;
+            fColor = ambient + diffuse +specular;
+
+            fColor.a = 1.0;
+        }
+    </script>
+    <!-- Fragment shader -->
+    <script id="fragment-shader" type="x-shader/x-fragment">
+
+        precision mediump float;
+
+        varying vec4 fColor;
+
+        void main()
+        {
+            gl_FragColor = fColor;
+        }
+    </script>
+
+    
+    <script type="text/javascript" src="common/webgl-utils.js"></script>
+    <script type="text/javascript" src="common/initShaders.js"></script>
+    <script type="text/javascript" src="common/MV.js"></script>
+    <script type="text/javascript" src="SphereVertexLightingShaders.js"></script>
+    <body>
+		<h1> Vertex Lighting Shader - Sphere </h1>
+         <br/>
+        <div>
+            <button id= "rotateLeft">Rotate Left</button> &nbsp &nbsp
+            <button id= "rotateRight">Rotate Right</button> &nbsp &nbsp
+            <button id= "toggleRotation">Toggle(Start / Stop) Rotation</button>
+        </div>
+        <br/>
+        <canvas id="gl-canvas" width="512" height="512">
+            Oops ... your browser doesn't support the HTML5 canvas element
+        </canvas>
+    </body>
+</html>

@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<script id="vertex-shader" type="x-shader/x-vertex">
+			attribute vec4 vPosition;
+			attribute vec4 vColor;
+			varying vec4 fColor;
+			uniform mat4 transformationMatrix;
+	
+			void main() {				
+    			fColor = vColor;
+    			gl_Position = transformationMatrix * vPosition;
+    			gl_Position.z = -gl_Position.z;
+				
+ 			}
+		</script>
+		<script id="fragment-shader" type="x-shader/x-fragment">
+			precision mediump float;
+			varying vec4 fColor;
+
+			void main() {
+				gl_FragColor = fColor;
+			}
+		</script>
+		<script type="text/javascript" src="common/webgl-utils.js"></script>
+		<script type="text/javascript" src="common/initShaders.js"></script>
+		<script type="text/javascript" src="common/MV.js"></script>
+		<script type="text/javascript" src="ColoredCubeRCpu.js"></script>
+	</head>
+	<body>
+		<div>
+			<b> Buttons: </b>&nbsp;&nbsp;
+			<button id="rotateX"> Rotate on X Axis </button>
+			<button id="rotateY"> Rotate on Y Axis </button>
+			<button id="rotateZ"> Rotate on Z Axis </button>
+			<div id="fps">   </div>
+		</div>
+		<canvas id="gl-canvas" width="512" height="512">
+			Oops ... your browser doesn't support the HTML5 canvas element
+		</canvas>
+	</body>
+
+</html>
+
+

@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <script id="vertex-shader" type="x-shader/x-vertex">
+            attribute vec4 vPosition;
+            attribute vec4 vColor;
+            attribute vec2 vTexCoord;
+            varying vec4 fColor;
+            varying vec2 fTexCoord;
+            uniform vec3 theta;
+
+            void main() {
+                vec3 angles = radians( theta );
+                vec3 c = cos( angles );
+                vec3 s = sin( angles );
+
+                mat4 rx = mat4( 1.0,  0.0,  0.0, 0.0,
+                    0.0,  c.x,  s.x, 0.0,
+                    0.0, -s.x,  c.x, 0.0,
+                    0.0,  0.0,  0.0, 1.0 );
+
+                mat4 ry = mat4( c.y, 0.0, -s.y, 0.0,
+                    0.0, 1.0,  0.0, 0.0,
+                    s.y, 0.0,  c.y, 0.0,
+                    0.0, 0.0,  0.0, 1.0 );
+
+
+                mat4 rz = mat4( c.z, s.z, 0.0, 0.0,
+                    -s.z,  c.z, 0.0, 0.0,
+                    0.0,  0.0, 1.0, 0.0,
+                    0.0,  0.0, 0.0, 1.0 );
+
+                fColor = vColor;
+                fTexCoord = vTexCoord;
+                gl_Position = rz * ry * rx * vPosition;
+
+            }
+        </script>
+        <script id="fragment-shader" type="x-shader/x-fragment">
+            precision mediump float;
+
+            varying vec4 fColor;
+            varying  vec2 fTexCoord;
+
+            uniform sampler2D texture;
+
+            void main() {
+                gl_FragColor = fColor * texture2D(texture,fTexCoord);
+            }
+        </script>
+        <script type="text/javascript" src="common/webgl-utils.js"></script>
+        <script type="text/javascript" src="common/initShaders.js"></script>
+        <script type="text/javascript" src="common/MV.js"></script>
+        <script type="text/javascript" src="CubeMultipleTextures.js"></script>
+    </head>
+    <body>
+        <div>
+            <b> Buttons: </b>&nbsp;&nbsp;
+            <button id="rotateX"> Rotate on X Axis </button>
+            <button id="rotateY"> Rotate on Y Axis </button>
+            <button id="rotateZ"> Rotate on Z Axis </button>
+
+        </div>
+        <canvas id="gl-canvas" width="512" height="512">
+            Oops ... your browser doesn't support the HTML5 canvas element
+        </canvas>
+		<img id = "T1" src = "image1.jpg" hidden></img>
+        <img id = "T2" src = "image2.jpg" hidden></img>
+        <img id = "T3" src = "image3.jpg" hidden></img>
+        <img id = "T4" src = "image4.jpg" hidden></img>
+        <img id = "T5" src = "image5.jpg" hidden></img>
+        <img id = "T6" src = "image6.jpg" hidden></img>
+    </body>
+
+</html>
+
+

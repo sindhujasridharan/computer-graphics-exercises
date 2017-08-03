@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<script id="vertex-shader" type="x-shader/x-vertex">
+			attribute vec4 vPosition;
+			uniform float theta;
+
+			void main() {
+				gl_Position.x = -sin(theta) * vPosition.x + cos(theta) * vPosition.y;
+				gl_Position.y = sin(theta) * vPosition.y + cos(theta) * vPosition.x;
+				gl_Position.z = 0.0;
+				gl_Position.w = 1.0;
+ 			}
+		</script>
+		<script id="fragment-shader" type="x-shader/x-fragment">
+			precision mediump float;
+
+			void main() {
+				gl_FragColor = vec4(0.5, 0.5, 1.0, 1.0 );
+			}
+		</script>
+		<script type="text/javascript" src="common/webgl-utils.js"></script>
+		<script type="text/javascript" src="common/initShaders.js"></script>
+		<script type="text/javascript" src="common/MV.js"></script>
+		<script type="text/javascript" src="square.js"></script>
+	</head>
+	<body>
+		<div>
+			<b> Buttons: </b>&nbsp;&nbsp;
+			<button id="rotateLeft"> Rotate Left </button>
+			<button id="rotateRight"> Rotate Right </button>
+			<button id="toggleDirection"> Toggle Direction </button> 
+			<button id="rotateFast"> Rotate Fast </button> 			
+			<button id="rotateSlow"> Rotate Slow </button> 		
+			<br/><br/>
+			<b> Slider: &nbsp;&nbsp;</b>  Select speed: <input id="slider" type="range" min="0" max="100" step="10" value="50">  </input>
+			<br/> <br/>
+			<b>Note:</b> &nbsp;&nbsp;			
+			Keyboard movement -> d [Rotate right], a [Rotate left], w [Increase speed], s [Decrease speed] <br/>
+			
+		</div>
+		<canvas id="gl-canvas" width="512" height="512">
+			Oops ... your browser doesn't support the HTML5 canvas element
+		</canvas>
+	</body>
+
+</html>
+
+

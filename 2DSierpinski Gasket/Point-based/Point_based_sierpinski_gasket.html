@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title> Point based sierpinski gasket </title>
+		<script id="vertex-shader" type="x-shader/x-vertex">
+
+		attribute vec4 vPosition;
+
+		//main function for the vertex shader
+		void main() {
+
+			gl_PointSize = 2.0;
+			gl_Position = vPosition;
+		}
+		</script>
+		
+		<script id="fragment-shader" type="x-shader/x-fragment">
+
+		precision mediump float;
+		
+		//main function for the fragment shader
+		void main() {
+			gl_FragColor = vec4(0.5, 0.2, 1.0, 1.5);
+		}
+		</script>
+		<!-- import other common javascript files -->
+		<script src="common/initShaders.js"></script>
+		<script src="common/webgl-utils.js"></script>
+		<script src="common/MV.js"></script>
+		<script src="point_based_sierpinski_gasket.js"></script>
+
+	</head>
+	<body>
+		<!-- canvas element to embed the point based sierpinski gasket -->
+		<div  style="text-align:center">
+			<h1> Point based Sierpinski Gasket	</h1>
+			<canvas id="point_based_sierpinski_gasket" height="500px" width="600px"> 
+				Error !! Webgl is not supported in your browser
+			</canvas>
+		</div>
+	</body>
+</html>
+
+

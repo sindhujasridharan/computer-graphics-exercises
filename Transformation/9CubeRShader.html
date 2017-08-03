@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<script id="vertex-shader" type="x-shader/x-vertex">
+			attribute vec4 vPosition;
+			attribute vec4 vColor;
+			varying vec4 fColor;
+			uniform vec3 thetaValue;
+			uniform vec3 translationValue;
+			uniform float scaleValue;
+						
+			void main() {		
+				vec3 angles = radians( thetaValue );
+   				vec3 c = cos( angles );
+    			vec3 s = sin( angles );
+
+    			mat4 rxMatrix = mat4( 1.0,  0.0,  0.0, 0.0,
+		    				0.0,  c.x,  s.x, 0.0,
+		    				0.0, -s.x,  c.x, 0.0,
+		    				0.0,  0.0,  0.0, 1.0 );
+
+			    mat4 ryMatrix = mat4( c.y, 0.0, -s.y, 0.0,
+		    				0.0, 1.0,  0.0, 0.0,
+		    				s.y, 0.0,  c.y, 0.0,
+		    				0.0, 0.0,  0.0, 1.0 );
+
+
+    			mat4 rzMatrix = mat4( c.z, s.z, 0.0, 0.0,
+		    				-s.z,  c.z, 0.0, 0.0,
+		    				0.0,  0.0, 1.0, 0.0,
+		    				0.0,  0.0, 0.0, 1.0 );		
+
+    			mat4 tMatrix = mat4( 1,0,0,0,
+							0,1,0,0,
+							0,0,1,0,
+							translationValue.x,translationValue.y,translationValue.z,1);
+
+    			mat4 sMatrix = mat4(scaleValue, 0, 0, 0,
+							0, scaleValue, 0, 0,
+							0, 0, scaleValue, 0, 
+							0, 0, 0, 1);
+
+    			fColor = vColor;
+    			gl_Position =   tMatrix * sMatrix * rxMatrix * ryMatrix * rzMatrix * vPosition;    
+    				
+				
+ 			}
+		</script>
+		<script id="fragment-shader" type="x-shader/x-fragment">
+			precision mediump float;
+			varying vec4 fColor;
+
+			void main() {
+				gl_FragColor = fColor;
+			}
+		</script>
+		<script type="text/javascript" src="common/webgl-utils.js"></script>
+		<script type="text/javascript" src="common/initShaders.js"></script>
+		<script type="text/javascript" src="common/MV.js"></script>
+		<script type="text/javascript" src="9CubeRShader.js"></script>
+	</head>
+	<body>
+		<div>
+			<b> Slider: &nbsp;&nbsp;</b>  Select size: <input id="scaleSlider" type="range" min="0.1" max="0.6" step="0.1" value="0.3">  </input>
+			<br/> <br/>
+			<b> Slider: &nbsp;&nbsp;</b>  Select angle [0 - 90]: <input id="angleSlider" type="range" min="0" max="90" step="1" value="45">  </input>
+			<br/> <br/>
+			<div id="fps">   </div>
+		</div>
+		<canvas id="gl-canvas" width="512" height="512">
+			Oops ... your browser doesn't support the HTML5 canvas element
+		</canvas>
+	</body>
+
+</html>
+
+
+	

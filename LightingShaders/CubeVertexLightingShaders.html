@@ -1,0 +1,105 @@
+<html>
+    <!-- Vertex shader-->
+    <script id="vertex-shader" type="x-shader/x-vertex">
+
+        attribute  vec4 vPosition;
+        attribute vec3 vNormal;
+
+        uniform vec3 theta;
+        uniform mat4 modelView;
+        uniform mat4 projection;
+        uniform vec4 lightPosition;
+
+        uniform vec4 ambientProduct;
+        uniform vec4 diffuseProduct;
+        uniform vec4 specularProduct;
+        uniform float shininess;
+
+        varying vec4 fColor;
+
+        void main()
+        {
+            //compute rotation matrix
+            vec3 angles = radians(theta);
+            vec3 c = cos(angles);
+            vec3 s = sin(angles);
+
+            mat4 rx = mat4(1.0,  0.0,  0.0, 0.0,
+		        0.0,  c.x,  s.x, 0.0,
+		        0.0, -s.x,  c.x, 0.0,
+		        0.0,  0.0,  0.0, 1.0);
+
+            mat4 ry = mat4(c.y, 0.0, -s.y, 0.0,
+		        0.0, 1.0,  0.0, 0.0,
+		        s.y, 0.0,  c.y, 0.0,
+		        0.0, 0.0,  0.0, 1.0);
+
+
+            mat4 rz = mat4(c.z, -s.z, 0.0, 0.0,
+		        s.z,  c.z, 0.0, 0.0,
+		        0.0,  0.0, 1.0, 0.0,
+		        0.0,  0.0, 0.0, 1.0);
+
+            mat4 modelViewMatrix = rx * ry * rz * modelView;
+
+            //compute lighting 
+
+            vec3 pos = -(modelViewMatrix * vPosition).xyz;
+            vec3 light = lightPosition.xyz;
+            vec3 L = normalize(light - pos);
+            vec3 E = normalize(-pos);
+            
+            vec3 N = normalize((modelViewMatrix*(vec4(vNormal,0))).xyz);
+            vec3 H = normalize(L + E);
+            
+            vec4 ambient = ambientProduct;
+            float Kd = max( dot(L, N), 0.0 );
+            vec4  diffuse = Kd*diffuseProduct;
+
+            float Ks = pow( max(dot(N, H), 0.0), shininess);
+            vec4  specular = Ks * specularProduct;
+
+            if(dot(L, N) < 0.0) {
+	            specular = vec4(0.0, 0.0, 0.0, 1.0);
+            }
+
+            gl_Position = projection * modelViewMatrix * vPosition;
+            fColor = ambient + diffuse +specular;
+
+            fColor.a = 1.0;
+
+        }
+    </script>
+    <!-- Fragment shader-->
+    <script id="fragment-shader" type="x-shader/x-fragment">
+
+        precision mediump float;
+   
+        varying vec4 fColor;
+
+        void main()
+        {
+            gl_FragColor = fColor;
+        }
+    </script>
+
+    <script type="text/javascript" src="./common/webgl-utils.js"></script>
+    <script type="text/javascript" src="./common/initShaders.js"></script>
+    <script type="text/javascript" src="./common/MV.js"></script>
+    <script type="text/javascript" src="CubeVertexLightingShaders.js"></script>
+
+    <body>
+		<h1> Vertex Lighting Shader - Cube </h1>
+        <br/>
+        <div>
+            <button id= "rotateX">Rotate X</button> &nbsp &nbsp
+            <button id= "rotateY">Rotate Y</button> &nbsp &nbsp
+            <button id= "rotateZ">Rotate Z</button> &nbsp &nbsp
+            <button id= "toggleRotation">Toggle(Start / Stop) Rotation</button>
+        </div>
+        <br/>
+        <canvas id="gl-canvas" width="512" height="512">
+            Oops ... your browser doesn't support the HTML5 canvas element
+        </canvas>
+    </body>
+</html>

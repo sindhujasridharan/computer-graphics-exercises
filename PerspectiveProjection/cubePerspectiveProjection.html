@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+	<html>
+		<script id="vertex-shader" type="x-shader/x-vertex">
+
+			attribute  vec4 vPosition;
+			attribute  vec4 vColor;
+			varying vec4 fColor;
+
+			uniform mat4 modelView;
+			uniform mat4 projection;
+
+			void main() 
+			{
+    			gl_Position = projection*modelView*vPosition;
+    			fColor = vColor;
+			} 
+		</script>
+
+		<script id="fragment-shader" type="x-shader/x-fragment">
+
+			precision mediump float;
+
+			varying vec4 fColor;
+
+			void main()
+			{
+    			gl_FragColor = fColor;
+			}
+		</script>
+
+		<script type="text/javascript" src="./common/webgl-utils.js"></script>
+		<script type="text/javascript" src="./common/initShaders.js"></script>
+		<script type="text/javascript" src="./common/MV.js"></script>
+		<script type="text/javascript" src="cubePerspectiveProjection.js"></script>
+
+		<body>
+			<div>
+				<b> Z Slider: </b> &nbsp;&nbsp; <input id="zSlider" type="range" min="0.1" max="3.4" step="0.1" value="3" /> 
+			</div>
+			<div>
+				<b> Y Slider: </b> &nbsp;&nbsp;<input id="ySlider" type="range" min="-3.0" max="0.0" step="0.1" value="-1.5" /> 
+			</div>
+			<div>
+				<b> X Slider: </b> &nbsp;&nbsp;<input id="xSlider" type="range" min="-3.0" max="0.0" step="0.1" value="-1.5" /> 
+			</div>
+			<!-- Separate sliders for each parameter-->
+
+			<div>
+				<b> ZNear Slider: </b> &nbsp;&nbsp; <input id="zNear" type="range" min="0.1" max="3.4" step="0.1" value="3" /> &nbsp;&nbsp; &nbsp;&nbsp; 
+				<b> ZFar Slider: </b> &nbsp;&nbsp; <input id="zFar" type="range" min=0 max="5" step="0.1" value="7" /> 
+			</div>
+			
+			<div>
+				<b> YTop Slider: </b> &nbsp;&nbsp;<input id="yTop" type="range" min="0.0" max="5.0" step="0.01" value="1.5" /> &nbsp;&nbsp; &nbsp;&nbsp; 
+				<b> YBottom Slider: </b> &nbsp;&nbsp;<input id="yBottom" type="range" min="-5.0" max="0.0" step="0.01" value="-1.5" /> 
+			</div>
+			
+			<div>
+				<b> XLeft Slider: </b> &nbsp;&nbsp;<input id="xLeft" type="range" min="-3.0" max="0.0" step="0.1" value="-1.5" /> &nbsp;&nbsp; &nbsp;&nbsp; 
+				<b> XRight Slider: </b> &nbsp;&nbsp;<input id="xRight" type="range" min="0.0" max="3.0" step="0.1" value="1.5" /> 
+			</div>
+			
+			<div>
+				<b> ViewX Slider: </b> &nbsp;&nbsp;<input id="xView" type="range" min="0.0" max="3.0" step="0.01" value="1.5" /> &nbsp;&nbsp; &nbsp;&nbsp; 
+				<b> ViewY Slider: </b> &nbsp;&nbsp;<input id="yView" type="range" min="0.0" max="3.0" step="0.01" value="1.5" /> &nbsp;&nbsp; &nbsp;&nbsp; 
+				<b> ViewZ Slider: </b> &nbsp;&nbsp;<input id="zView" type="range" min="3.5" max="5.0" step="0.01" value="1.5" /> 
+			</div>
+			
+			<canvas id="gl-canvas" width="512" height="512">
+				Oops ... your browser doesn't support the HTML5 canvas element
+			</canvas>
+
+		</body>
+	</html>
